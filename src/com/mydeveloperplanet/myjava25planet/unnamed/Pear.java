@@ -1,4 +1,3 @@
 package com.mydeveloperplanet.myjava25planet.unnamed;
 
-public class Pear {
-}
+public class Pear extends AbstractFruit {}

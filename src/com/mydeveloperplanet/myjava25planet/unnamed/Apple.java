@@ -1,4 +1,3 @@
 package com.mydeveloperplanet.myjava25planet.unnamed;
 
-public class Apple {
-}
+public class Apple extends AbstractFruit {}

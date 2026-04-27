@@ -1,66 +1,63 @@
 package com.mydeveloperplanet.myjava25planet.gatherers;
 
 import java.util.List;
-import java.util.stream.Gatherer;
+import java.util.stream.Gatherers;
 
-public class Gatherers {
+public class GatherersExample {
 
-    public static void main(String[] args) {
-        List<Integer> nums = List.of(1, 2, 3, 4, 5);
+    static void main() {
+        List<Integer> numbers = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
 
-        exampleFold(nums);
-        exampleMapConcurrent(nums);
-        exampleScan(nums);
-        exampleWindowFixed(nums);
-        exampleWindowSliding(nums);
+        exampleFold(numbers);
+        exampleMapConcurrent(numbers);
+        exampleScan(numbers);
+        exampleWindowFixed(numbers);
+        exampleWindowSliding(numbers);
     }
 
-    static void exampleFold(List<Integer> nums) {
-        int sum = nums.stream()
-                .gather(Gatherer.fold(0, (acc, x) -> acc + x))
+    static void exampleFold(List<Integer> numbers) {
+        int sum = numbers.stream()
+                .gather(Gatherers.fold(() -> 0, (acc, x) -> acc + x))
                 .findFirst()              // fold produces a single result
                 .orElse(0);
 
-        System.out.println("fold sum = " + sum); // 15
+        System.out.println("fold sum = " + sum); // 45
     }
 
-    static void exampleMapConcurrent(List<Integer> nums) {
-        List<Integer> squares = nums.stream()
-                .gather(Gatherer.mapConcurrent(4, x -> x * x)) // 4 = parallelism hint
+    static void exampleMapConcurrent(List<Integer> numbers) {
+        List<Integer> squares = numbers.stream()
+                .gather(Gatherers.mapConcurrent(4, x -> x * x)) // 4 = parallelism hint
                 .toList();
 
-        System.out.println("mapConcurrent squares = " + squares); // [1, 4, 9, 16, 25]
+        System.out.println("mapConcurrent squares = " + squares); // [1, 4, 9, 16, 25, 36, 49, 64, 81]
     }
 
-    static void exampleScan(List<Integer> nums) {
-        List<Integer> runningSums = nums.stream()
-                .gather(Gatherers.scan(0, (acc, x) -> acc + x))
+    static void exampleScan(List<Integer> numbers) {
+        List<Integer> runningSums = numbers.stream()
+                .gather(Gatherers.scan(() -> 0, (acc, x) -> acc + x))
                 .toList();
 
-        System.out.println("scan running sums = " + runningSums); // [1, 3, 6, 10, 15]
+        System.out.println("scan running sums = " + runningSums); // [1, 3, 6, 10, 15, 21, 28, 36, 45]
     }
 
-    static void exampleWindowFixed(List<Integer> nums) {
+    static void exampleWindowFixed(List<Integer> numbers) {
         int size = 2;
 
-        List<List<Integer>> windows = nums.stream()
+        List<List<Integer>> windows = numbers.stream()
                 .gather(Gatherers.windowFixed(size))
-                .map(List::copyOf) // make windows immutable snapshots
                 .toList();
 
-        System.out.println("windowFixed(2) = " + windows); // [[1, 2], [3, 4], [5]]
+        System.out.println("windowFixed(2) = " + windows); // [[1, 2], [3, 4], [5, 6], [7, 8], [9]]
     }
 
-    static void exampleWindowSliding(List<Integer> nums) {
+    static void exampleWindowSliding(List<Integer> numbers) {
         int size = 3;
 
-        List<List<Integer>> windows = nums.stream()
+        List<List<Integer>> windows = numbers.stream()
                 .gather(Gatherers.windowSliding(size))
-                .map(List::copyOf)
                 .toList();
 
-        System.out.println("windowSliding(3) = " + windows); // [[1, 2, 3], [2, 3, 4], [3, 4, 5]]
+        System.out.println("windowSliding(3) = " + windows); // [[1, 2, 3], [2, 3, 4], [3, 4, 5], [4, 5, 6], [5, 6, 7], [6, 7, 8], [7, 8, 9]]
     }
-
 
 }

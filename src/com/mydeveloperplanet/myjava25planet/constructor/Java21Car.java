@@ -1,4 +1,4 @@
-package com.mydeveloperlanet.myjava25planet.constructor;
+package com.mydeveloperplanet.myjava25planet.constructor;
 
 import java.awt.Color;
 
